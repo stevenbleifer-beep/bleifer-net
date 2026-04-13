@@ -7,6 +7,66 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<script>
+// ── TAMPER PROTECTION ────────────────────────────────────────────────────────
+(function() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+    // Block common DevTools keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // F12
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        // Ctrl/Cmd + Shift + I (inspector)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+        // Ctrl/Cmd + Shift + J (console)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+        // Ctrl/Cmd + Shift + C (element picker)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
+        // Ctrl/Cmd + U (view source)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') { e.preventDefault(); return false; }
+        // Ctrl/Cmd + S (save page)
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); return false; }
+    });
+
+    // DevTools size detection — blur page if devtools panel is open
+    var threshold = 160;
+    function checkDevTools() {
+        var widthDiff = window.outerWidth - window.innerWidth > threshold;
+        var heightDiff = window.outerHeight - window.innerHeight > threshold;
+        var body = document.body;
+        if (body) {
+            if (widthDiff || heightDiff) {
+                body.style.filter = 'blur(8px)';
+                body.style.pointerEvents = 'none';
+                body.style.userSelect = 'none';
+            } else {
+                body.style.filter = '';
+                body.style.pointerEvents = '';
+                body.style.userSelect = '';
+            }
+        }
+    }
+    setInterval(checkDevTools, 1000);
+    window.addEventListener('resize', checkDevTools);
+
+    // Overwrite console to deter use
+    var noop = function() {};
+    Object.defineProperty(window, 'console', {
+        get: function() {
+            return { log: noop, warn: noop, error: noop, info: noop, debug: noop,
+                     table: noop, dir: noop, group: noop, groupEnd: noop };
+        }
+    });
+
+    // Disable text selection on the page
+    document.addEventListener('selectstart', function(e) {
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+        }
+    });
+})();
+</script>
 
 <!-- NAV -->
 <nav class="nav">
