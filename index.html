@@ -332,20 +332,17 @@ var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','
 // Your actual plan from half_marathon_plan_sep13.xlsx
 // weekStart is Monday of each week. day: 0=Mon … 6=Sun
 var TRAINING_PLAN = [
-    {id:'L1',phase:'Lead-up',weekStart:'2026-04-13',vacation:false,runs:[
+    {id:'L1',phase:'Lead-up',weekStart:'2026-04-20',vacation:false,runs:[
         {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy, build the habit'},
-        {day:3,name:'Easy Run',type:'easy',miles:2,note:'Easy, build the habit'}]},
-    {id:'L2',phase:'Lead-up',weekStart:'2026-04-20',vacation:false,runs:[
-        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Comfortable pace'},
         {day:3,name:'Easy Run',type:'easy',miles:2.5,note:'Comfortable pace'}]},
-    {id:'L3',phase:'Lead-up',weekStart:'2026-04-27',vacation:false,runs:[
+    {id:'L2',phase:'Lead-up',weekStart:'2026-04-27',vacation:false,runs:[
         {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy effort'},
         {day:3,name:'Easy Run',type:'easy',miles:3,note:'Building up'}]},
-    {id:'L4',phase:'Lead-up',weekStart:'2026-05-04',vacation:false,runs:[
+    {id:'L3',phase:'Lead-up',weekStart:'2026-05-04',vacation:false,runs:[
         {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy effort'},
         {day:3,name:'Easy Run',type:'easy',miles:3,note:'Mid-week run'},
         {day:5,name:'Long Run',type:'long',miles:3.5,note:'Add a longer run'}]},
-    {id:'L5',phase:'Lead-up',weekStart:'2026-05-11',vacation:false,runs:[
+    {id:'L4',phase:'Lead-up',weekStart:'2026-05-11',vacation:false,runs:[
         {day:1,name:'Easy Run',type:'easy',miles:2,note:'Last week before vacation'},
         {day:3,name:'Easy Run',type:'easy',miles:3,note:'Keep it easy'},
         {day:5,name:'Long Run',type:'long',miles:4,note:'Last long run before vacation'}]},
@@ -484,7 +481,7 @@ function getCurrentPlanWeekIdx() {
         var we = addDays(ws, 6);
         if (t >= ws && t <= we) return i;
     }
-    if (t < TRAINING_PLAN[0].weekStart) return 0;
+    if (t < TRAINING_PLAN[0].weekStart) return -1;
     return TRAINING_PLAN.length - 1;
 }
 
@@ -604,7 +601,7 @@ function autoMatchPlan(runs) {
 var displayWeek = null; // index into TRAINING_PLAN
 
 window.changeWeek = function(delta) {
-    displayWeek = Math.max(0, Math.min(TRAINING_PLAN.length-1, displayWeek + delta));
+    displayWeek = Math.max(-1, Math.min(TRAINING_PLAN.length-1, displayWeek + delta));
     renderPlan();
 };
 
@@ -618,8 +615,52 @@ function renderPlan() {
 
     if (displayWeek === null) displayWeek = getCurrentPlanWeekIdx();
 
-    prevBtn.disabled = displayWeek <= 0;
+    prevBtn.disabled = displayWeek <= -1;
     nextBtn.disabled = displayWeek >= TRAINING_PLAN.length - 1;
+
+    // ── PRE-TRAINING WEEK (runs from March onward, before plan starts) ─────────
+    if (displayWeek === -1) {
+        var preStart = '2026-03-01';
+        var preEnd = addDays(TRAINING_PLAN[0].weekStart, -1);
+        weekLabelEl.textContent = 'Pre-Training · ' + formatDateShort(preStart) + '–' + formatDateShort(preEnd);
+
+        var preRuns = runs.filter(function(r) {
+            return r.date >= preStart && r.date <= preEnd;
+        });
+
+        var html = '<div style="padding: 20px 0;">'
+            + '<div style="font-family:var(--font-mono);font-size:0.62rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-tertiary);margin-bottom:10px;">Pre-Training Runs</div>';
+
+        if (preRuns.length === 0) {
+            html += '<div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.04em;padding: 10px 0;">No runs logged yet. Connect Strava or log runs manually.</div>';
+        } else {
+            html += '<div class="plan-runs">';
+            for (var p=0; p<preRuns.length; p++) {
+                var pr = preRuns[p];
+                var prPace = (pr.dist && pr.secs) ? calcPace(pr.dist, pr.secs)+' /mi' : null;
+                var prStrava = pr.source === 'strava';
+                var prDow = parseDate(pr.date).getDay();
+                html += '<div class="plan-run-item">'
+                    + '<div style="width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+                    +   '<svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg>'
+                    + '</div>'
+                    + '<div class="plan-run-info">'
+                    +   '<div class="plan-run-top">'
+                    +     '<span class="plan-run-day">'+DAY_NAMES[prDow === 0 ? 6 : prDow-1]+'</span>'
+                    +     '<span class="plan-run-name">'+(pr.notes || 'Bonus Run')+'</span>'
+                    +     (prStrava ? '<span class="strava-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava</span>' : '')
+                    +   '</div>'
+                    +   '<div class="plan-run-note">'+formatDateFull(pr.date)+(prPace ? ' · '+prPace : '')+'</div>'
+                    + '</div>'
+                    + '<div class="plan-run-miles">'+pr.dist.toFixed(2)+'<br><small>mi</small></div>'
+                    + '</div>';
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        el.innerHTML = html;
+        return;
+    }
 
     var week = TRAINING_PLAN[displayWeek];
     var ws = week.weekStart;
@@ -665,7 +706,7 @@ function renderPlan() {
             + '<button class="plan-checkbox '+checkClass+'" onclick="toggleCheck(\''+key+'\')" title="'+(isChecked?'Mark incomplete':'Mark complete')+'">'+checkIcon+'</button>'
             + '<div class="plan-run-info">'
             +   '<div class="plan-run-top">'
-            +     '<span class="plan-run-day">'+DAY_NAMES[run.day]+'</span>'
+            +     '<span class="plan-run-day">Run '+(i+1)+'</span>'
             +     '<span class="plan-run-name'+(isChecked||isStravaMatch?' done':'')+'">'+run.name+'</span>'
             +     '<span class="run-type-pill run-type-'+run.type+'">'+run.type+'</span>'
             +     stravaBadge
@@ -859,8 +900,13 @@ function renderHero() {
     document.getElementById('hero-days').textContent = Math.max(0, daysLeft);
 
     var curIdx = getCurrentPlanWeekIdx();
-    var cur = TRAINING_PLAN[curIdx];
-    var weekDisplay = typeof cur.id === 'number' ? cur.id + ' / 15' : cur.id;
+    var weekDisplay;
+    if (curIdx === -1) {
+        weekDisplay = 'Pre-Training';
+    } else {
+        var cur = TRAINING_PLAN[curIdx];
+        weekDisplay = typeof cur.id === 'number' ? cur.id + ' / 15' : cur.id;
+    }
     document.getElementById('hero-week').textContent = weekDisplay;
 
     var checked = getChecked();
