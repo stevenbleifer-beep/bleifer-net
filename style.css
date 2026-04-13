@@ -943,6 +943,87 @@ body {
     margin-bottom: 14px;
 }
 
+/* --- RACE RESULT CARD --- */
+.race-result-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    text-align: center;
+}
+
+.race-result-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+}
+
+.race-result-title {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.race-result-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+}
+
+.race-result-stats {
+    display: inline-flex;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--bg);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.race-result-stat {
+    padding: 14px 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.race-result-stat + .race-result-stat {
+    border-left: 1px solid var(--border-strong);
+}
+
+.race-result-stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.race-result-stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+}
+
+.race-result-pending {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+}
+
 /* --- FOOTER --- */
 .footer {
     text-align: center;

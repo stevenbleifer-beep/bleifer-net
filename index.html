@@ -144,6 +144,9 @@
         </div>
     </div>
 
+    <!-- RACE RESULT (shown on/after race day) -->
+    <div id="race-result-card" style="display:none; margin-bottom: 28px;"></div>
+
     <!-- STRAVA BANNER (shown when not connected) -->
     <div class="strava-banner" id="strava-banner">
         <div class="strava-banner-text">
@@ -772,6 +775,79 @@ function renderStats(runs) {
     document.getElementById('progress-text').textContent = longest.toFixed(1)+' / '+RACE_DISTANCE+' mi';
 }
 
+// ── RENDER RACE RESULT ───────────────────────────────────────────────────────
+function renderRaceResult(runs) {
+    var card = document.getElementById('race-result-card');
+    var daysLeft = diffDays(RACE_DATE, today());
+
+    // Only show on race day or after
+    if (daysLeft > 0) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+
+    // Look for a run on race day with distance >= 11 miles (accounts for GPS drift)
+    var result = null;
+    for (var i = 0; i < runs.length; i++) {
+        if (runs[i].date === RACE_DATE && runs[i].dist >= 11) { result = runs[i]; break; }
+    }
+
+    if (daysLeft === 0 && !result) {
+        // Race day but no result yet
+        card.innerHTML = '<div class="race-result-card">'
+            + '<div class="race-result-eyebrow">Sep 13, 2026</div>'
+            + '<div class="race-result-title">Race Day!</div>'
+            + '<div class="race-result-subtitle">Good luck out there. You\'ve trained for this.</div>'
+            + (isStravaConnected()
+                ? '<div class="race-result-pending">Your finish time will appear here once Strava syncs.</div>'
+                  + '<button class="btn btn-primary" onclick="syncStrava()">Sync Strava</button>'
+                : '<div class="race-result-pending">Connect Strava to auto-import your finish time.</div>'
+                  + '<button class="btn btn-primary" onclick="openSettings()">Connect Strava</button>')
+            + '</div>';
+        return;
+    }
+
+    if (daysLeft < 0 && !result) {
+        // Past race day, no result synced yet
+        card.innerHTML = '<div class="race-result-card">'
+            + '<div class="race-result-eyebrow">Sep 13, 2026</div>'
+            + '<div class="race-result-title">Congratulations!</div>'
+            + '<div class="race-result-subtitle">You ran a half marathon.</div>'
+            + (isStravaConnected()
+                ? '<div class="race-result-pending">Sync Strava to load your official finish time.</div>'
+                  + '<button class="btn btn-primary" onclick="syncStrava()">Sync Strava</button>'
+                : '<div class="race-result-pending">Connect Strava to pull in your finish time.</div>'
+                  + '<button class="btn btn-primary" onclick="openSettings()">Connect Strava</button>')
+            + '</div>';
+        return;
+    }
+
+    // Result found — show finish time
+    var pace = result.secs ? calcPace(result.dist, result.secs) : null;
+    var timeStr = result.secs ? formatDuration(result.secs) : '--';
+
+    card.innerHTML = '<div class="race-result-card">'
+        + '<div class="race-result-eyebrow">Sep 13, 2026 · Half Marathon</div>'
+        + '<div class="race-result-title">Congratulations!</div>'
+        + '<div class="race-result-subtitle">You ran 13.1 miles.</div>'
+        + '<div class="race-result-stats">'
+        +   '<div class="race-result-stat">'
+        +     '<div class="race-result-stat-value">'+timeStr+'</div>'
+        +     '<div class="race-result-stat-label">Finish Time</div>'
+        +   '</div>'
+        +   '<div class="race-result-stat">'
+        +     '<div class="race-result-stat-value">'+result.dist.toFixed(2)+'</div>'
+        +     '<div class="race-result-stat-label">Miles</div>'
+        +   '</div>'
+        +   (pace ? '<div class="race-result-stat">'
+        +     '<div class="race-result-stat-value">'+pace+'</div>'
+        +     '<div class="race-result-stat-label">Avg Pace</div>'
+        +   '</div>' : '')
+        + '</div>'
+        + '<div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-tertiary);letter-spacing:0.06em;text-transform:uppercase;">'
+        +   (result.source === 'strava' ? 'Via Strava' : 'Manually logged')
+        + '</div>'
+        + '</div>';
+}
+
 // ── RENDER HERO ───────────────────────────────────────────────────────────────
 function renderHero() {
     var daysLeft = diffDays(RACE_DATE, today());
@@ -848,6 +924,7 @@ function renderAll() {
     var runs = getRuns();
     autoMatchPlan(runs);
     renderHero();
+    renderRaceResult(runs);
     renderStats(runs);
     renderPlan();
     renderRunsList(runs);
