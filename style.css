@@ -1,0 +1,969 @@
+/* ========================================
+   BLEIFER.NET — HALF MARATHON TRACKER
+   Nothing-inspired minimal design
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap');
+
+/* --- BASE --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #e8e8e4;
+    --surface: #efefeb;
+    --surface-raised: #f5f5f1;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5a5a58;
+    --text-tertiary: #8a8a88;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --accent: #1a1a1a;
+    --accent-hover: #333;
+    --accent-light: rgba(0,0,0,0.05);
+    --success: #1a1a1a;
+    --success-light: rgba(0,0,0,0.06);
+    --strava: #FC4C02;
+    --strava-hover: #e84400;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-md: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --radius-pill: 999px;
+    --font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    --font-mono: 'DM Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, rgba(0,0,0,0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* --- LAYOUT --- */
+.container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* --- NAV --- */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(232,232,228,0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    height: 52px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-logo {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+}
+
+.nav-btn:hover {
+    background: var(--accent-light);
+    color: var(--text-primary);
+}
+
+.nav-btn.strava-btn {
+    color: var(--strava);
+    border-color: rgba(252,76,2,0.3);
+}
+.nav-btn.strava-btn:hover {
+    background: rgba(252,76,2,0.06);
+    color: var(--strava);
+}
+
+.nav-btn.settings-btn {
+    border: none;
+    padding: 5px 8px;
+}
+.nav-btn svg { flex-shrink: 0; }
+
+/* --- HERO --- */
+.hero {
+    padding: 72px 0 56px;
+    text-align: center;
+}
+
+.hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: 4.5rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    line-height: 1.05;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-bottom: 36px;
+    letter-spacing: 0.01em;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-meta {
+    display: inline-flex;
+    gap: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--surface-raised);
+    overflow: hidden;
+}
+
+.hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 28px;
+}
+
+.hero-meta-divider {
+    width: 1px;
+    background: var(--border-strong);
+    align-self: stretch;
+}
+
+.hero-meta-value {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.hero-meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+}
+
+/* --- CARDS --- */
+.card {
+    background: var(--surface-raised);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.card-padded {
+    padding: 22px;
+}
+
+/* --- SECTION HEADER --- */
+.section {
+    margin-bottom: 28px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.section-action {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    background: none;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    transition: background 0.15s;
+    text-decoration: none;
+}
+.section-action:hover { background: var(--accent-light); }
+
+/* --- STATS GRID --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 16px;
+}
+
+.stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.9rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+}
+
+/* --- PROGRESS BAR --- */
+.progress-section { margin-top: 0; }
+
+.progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.progress-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.progress-value {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.progress-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* --- TRAINING PLAN --- */
+.plan-week-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.week-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-raised);
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.week-nav-btn:hover {
+    background: var(--accent-light);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+.week-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.week-nav-btn:disabled:hover {
+    background: var(--surface-raised);
+    color: var(--text-secondary);
+    border-color: var(--border-strong);
+}
+
+.week-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 160px;
+    text-align: center;
+}
+
+.plan-runs { display: flex; flex-direction: column; }
+
+.plan-run-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+.plan-run-item:last-child { border-bottom: none; }
+
+.plan-checkbox {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    color: transparent;
+}
+.plan-checkbox:hover {
+    border-color: var(--text-primary);
+    background: var(--accent-light);
+}
+.plan-checkbox.checked {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--bg);
+}
+.plan-checkbox.strava-matched {
+    background: var(--strava);
+    border-color: var(--strava);
+    color: #fff;
+}
+
+.plan-run-info { flex: 1; min-width: 0; }
+
+.plan-run-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.plan-run-day {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    min-width: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.plan-run-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.plan-run-name.done {
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+}
+
+.plan-run-note {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    padding-left: 36px;
+    letter-spacing: 0.01em;
+}
+
+.run-type-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid var(--border-strong);
+    color: var(--text-tertiary);
+    background: transparent;
+}
+
+/* All pills same monochrome style */
+.run-type-easy, .run-type-long, .run-type-tempo, .run-type-race {
+    background: transparent;
+    color: var(--text-tertiary);
+    border-color: var(--border-strong);
+}
+.run-type-race {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.plan-run-miles {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: right;
+    flex-shrink: 0;
+}
+.plan-run-miles small {
+    font-size: 0.62rem;
+    color: var(--text-tertiary);
+}
+
+.strava-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--strava);
+    padding: 2px 7px;
+    background: rgba(252,76,2,0.08);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* --- STRAVA BANNER --- */
+.strava-banner {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.strava-banner-text h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+}
+.strava-banner-text p {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.btn-strava {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--strava);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, transform 0.1s;
+    text-decoration: none;
+}
+.btn-strava:hover { background: var(--strava-hover); }
+.btn-strava:active { transform: scale(0.98); }
+
+/* --- RUNS LIST --- */
+.runs-list { display: flex; flex-direction: column; }
+
+.run-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+}
+.run-row:last-child { border-bottom: none; }
+
+.run-row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-secondary);
+}
+.run-row-icon.strava { background: rgba(252,76,2,0.08); color: var(--strava); border-color: rgba(252,76,2,0.15); }
+
+.run-row-info { flex: 1; min-width: 0; }
+.run-row-title {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.run-row-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    margin-top: 1px;
+    letter-spacing: 0.02em;
+}
+
+.run-row-stats { text-align: right; flex-shrink: 0; }
+.run-row-dist {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.run-row-pace {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-tertiary);
+    margin-top: 1px;
+}
+
+.run-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+.run-delete-btn:hover { color: var(--text-primary); }
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* --- LOG FORM --- */
+.log-form { display: grid; gap: 12px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+
+.form-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+}
+.form-input:focus, .form-textarea:focus {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+}
+.form-input::placeholder, .form-textarea::placeholder {
+    color: var(--text-tertiary);
+}
+.form-textarea { min-height: 72px; resize: vertical; }
+
+.pace-display {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-tertiary);
+}
+
+/* --- BUTTONS --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 22px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+}
+.btn-primary:hover { background: #333; }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+    background: var(--bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover { background: var(--accent-light); }
+
+.btn-ghost {
+    background: none;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    font-size: 0.68rem;
+}
+.btn-ghost:hover { background: var(--accent-light); color: var(--text-primary); }
+
+/* --- MODAL --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.96) translateY(8px);
+    transition: transform 0.2s;
+}
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+.modal-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+}
+.modal-close:hover { background: var(--accent-light); color: var(--text-primary); }
+
+.modal-body {
+    padding: 0 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-hint {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    line-height: 1.55;
+}
+.modal-hint a { color: var(--text-primary); }
+.modal-hint code {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+}
+
+.connected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    border-radius: var(--radius-pill);
+    padding: 3px 9px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.connected-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #30d158;
+}
+
+/* --- WEEKLY CHART --- */
+.week-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 56px;
+}
+
+.week-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.week-bar {
+    width: 100%;
+    background: rgba(0,0,0,0.12);
+    border-radius: 3px 3px 0 0;
+    transition: height 0.4s cubic-bezier(0.4,0,0.2,1);
+    min-height: 2px;
+}
+.week-bar.is-current { background: var(--text-primary); }
+
+.week-bar-label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--text-tertiary);
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+/* --- SYNC STATUS --- */
+.sync-status {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.sync-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #30d158;
+    flex-shrink: 0;
+}
+
+/* --- TOAST --- */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(14px);
+    background: var(--text-primary);
+    color: var(--bg);
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 1000;
+    white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* --- NO RACE STATE --- */
+.no-race-state {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--text-tertiary);
+}
+.no-race-state p {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+/* --- FOOTER --- */
+.footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.footer a { color: var(--text-tertiary); text-decoration: none; }
+.footer a:hover { color: var(--text-primary); }
+.footer p + p { margin-top: 4px; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+    .hero-title { font-size: 2.8rem; }
+    .hero-meta { flex-wrap: wrap; justify-content: center; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-row-2 { grid-template-columns: 1fr; }
+    .container { padding: 0 16px; }
+    .hero { padding: 48px 0 40px; }
+    .strava-banner { flex-direction: column; align-items: flex-start; }
+}
