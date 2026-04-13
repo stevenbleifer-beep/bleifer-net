@@ -677,6 +677,43 @@ function renderPlan() {
         weekNote = ''; // only show on first run
     }
     html += '</div>';
+
+    // ── BONUS RUNS ─────────────────────────────────────────────────────────────
+    // Any logged runs during this week that aren't on a scheduled plan day
+    var scheduledDates = {};
+    for (var s=0; s<week.runs.length; s++) {
+        scheduledDates[getPlanRunDate(displayWeek, s)] = true;
+    }
+    var bonusRuns = runs.filter(function(r) {
+        return r.date >= ws && r.date <= we && !scheduledDates[r.date];
+    });
+
+    if (bonusRuns.length > 0) {
+        html += '<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">'
+            + '<div style="font-family:var(--font-mono);font-size:0.62rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-tertiary);margin-bottom:10px;">Bonus Runs</div>'
+            + '<div class="plan-runs">';
+        for (var b=0; b<bonusRuns.length; b++) {
+            var br = bonusRuns[b];
+            var pace = (br.dist && br.secs) ? calcPace(br.dist, br.secs)+' /mi' : null;
+            var isStrava = br.source === 'strava';
+            html += '<div class="plan-run-item">'
+                + '<div style="width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+                +   '<svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg>'
+                + '</div>'
+                + '<div class="plan-run-info">'
+                +   '<div class="plan-run-top">'
+                +     '<span class="plan-run-day">'+DAY_NAMES[parseDate(br.date).getDay() === 0 ? 6 : parseDate(br.date).getDay()-1]+'</span>'
+                +     '<span class="plan-run-name">'+(br.notes || 'Extra Run')+'</span>'
+                +     (isStrava ? '<span class="strava-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava</span>' : '')
+                +   '</div>'
+                +   '<div class="plan-run-note">'+formatDateFull(br.date)+(pace ? ' · '+pace : '')+'</div>'
+                + '</div>'
+                + '<div class="plan-run-miles">'+br.dist.toFixed(2)+'<br><small>mi</small></div>'
+                + '</div>';
+        }
+        html += '</div></div>';
+    }
+
     el.innerHTML = html;
 }
 
