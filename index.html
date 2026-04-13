@@ -199,12 +199,11 @@
         </div>
         <div class="modal-body">
 
-            <!-- Race Date -->
+            <!-- Race -->
             <div>
                 <div class="modal-section-label">Race</div>
-                <div class="form-group">
-                    <label class="form-label" for="settings-race-date">Race Date</label>
-                    <input class="form-input" type="date" id="settings-race-date">
+                <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary); padding: 10px 13px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                    Sep 13, 2026 — Half Marathon
                 </div>
             </div>
 
@@ -263,25 +262,92 @@
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 var RACE_DISTANCE = 13.1;
-var PLAN_WEEKS = 12;
+var RACE_DATE = '2026-09-13';
 var DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-// 12-week half marathon training plan (Hal Higdon Novice 1 inspired)
-// day: 0=Mon ... 6=Sun, type: easy/long/tempo/race
+// Your actual plan from half_marathon_plan_sep13.xlsx
+// weekStart is Monday of each week. day: 0=Mon … 6=Sun
 var TRAINING_PLAN = [
-    { week: 1,  runs: [{day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy, conversational pace'},{day:3,name:'Easy Run',type:'easy',miles:3,note:'Stay comfortable'},{day:6,name:'Long Run',type:'long',miles:5,note:'Slow and steady — enjoy it'}]},
-    { week: 2,  runs: [{day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy effort'},{day:3,name:'Easy Run',type:'easy',miles:3.5,note:'Keep it easy'},{day:6,name:'Long Run',type:'long',miles:6,note:'Add a mile to last week'}]},
-    { week: 3,  runs: [{day:1,name:'Easy Run',type:'easy',miles:3.5,note:'Easy pace'},{day:3,name:'Easy Run',type:'easy',miles:4,note:'Mid-week build'},{day:6,name:'Long Run',type:'long',miles:7,note:'Focus on time on feet'}]},
-    { week: 4,  runs: [{day:1,name:'Easy Run',type:'easy',miles:3.5,note:'Easy effort'},{day:3,name:'Easy Run',type:'easy',miles:4,note:'Comfortable pace'},{day:6,name:'Long Run',type:'long',miles:8,note:'Longest run so far — trust the training'}]},
-    { week: 5,  runs: [{day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy pace'},{day:3,name:'Tempo Run',type:'tempo',miles:4,note:'Comfortably hard — 80% effort for 2 miles in the middle'},{day:6,name:'Long Run',type:'long',miles:9,note:'Settle into race pace for the last mile'}]},
-    { week: 6,  runs: [{day:1,name:'Easy Run',type:'easy',miles:3,note:'Recovery week — easy!'},{day:3,name:'Easy Run',type:'easy',miles:3,note:'Keep it light'},{day:6,name:'Long Run',type:'long',miles:6,note:'Recovery long run — slow and relaxed'}]},
-    { week: 7,  runs: [{day:1,name:'Easy Run',type:'easy',miles:4,note:'Fresh legs after recovery'},{day:3,name:'Tempo Run',type:'tempo',miles:5,note:'3 miles at tempo in the middle'},{day:6,name:'Long Run',type:'long',miles:10,note:'Double digits! Take it easy at first'}]},
-    { week: 8,  runs: [{day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy day'},{day:3,name:'Easy Run',type:'easy',miles:5,note:'Comfortable mid-week run'},{day:6,name:'Long Run',type:'long',miles:11,note:'Just 2 miles shy of race day'}]},
-    { week: 9,  runs: [{day:1,name:'Easy Run',type:'easy',miles:4,note:'Active recovery'},{day:3,name:'Tempo Run',type:'tempo',miles:5,note:'Practice race pace for 3–4 miles'},{day:6,name:'Long Run',type:'long',miles:12,note:'Peak long run — you\'ve got this'}]},
-    { week: 10, runs: [{day:1,name:'Easy Run',type:'easy',miles:4,note:'Taper begins — easy effort'},{day:3,name:'Easy Run',type:'easy',miles:5,note:'Comfortable pace'},{day:6,name:'Long Run',type:'long',miles:10,note:'Taper — cut back and let legs recover'}]},
-    { week: 11, runs: [{day:1,name:'Easy Run',type:'easy',miles:3,note:'Keep it easy'},{day:3,name:'Easy Run',type:'easy',miles:3,note:'Short and easy'},{day:6,name:'Long Run',type:'long',miles:8,note:'Final long run — finish fresh'}]},
-    { week: 12, runs: [{day:1,name:'Easy Run',type:'easy',miles:2,note:'Short shakeout'},{day:3,name:'Easy Run',type:'easy',miles:2,note:'Legs should feel springy'},{day:5,name:'Shakeout',type:'easy',miles:1,note:'10-min jog just to loosen up'},{day:6,name:'RACE DAY',type:'race',miles:13.1,note:'Go get it. 13.1 miles.'}]}
+    {id:'L1',phase:'Lead-up',weekStart:'2026-04-13',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy, build the habit'},
+        {day:3,name:'Easy Run',type:'easy',miles:2,note:'Easy, build the habit'}]},
+    {id:'L2',phase:'Lead-up',weekStart:'2026-04-20',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Comfortable pace'},
+        {day:3,name:'Easy Run',type:'easy',miles:2.5,note:'Comfortable pace'}]},
+    {id:'L3',phase:'Lead-up',weekStart:'2026-04-27',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:3,note:'Building up'}]},
+    {id:'L4',phase:'Lead-up',weekStart:'2026-05-04',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:3,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:3.5,note:'Add a longer run'}]},
+    {id:'L5',phase:'Lead-up',weekStart:'2026-05-11',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Last week before vacation'},
+        {day:3,name:'Easy Run',type:'easy',miles:3,note:'Keep it easy'},
+        {day:5,name:'Long Run',type:'long',miles:4,note:'Last long run before vacation'}]},
+    {id:'V1',phase:'Vacation',weekStart:'2026-05-18',vacation:true,vacationNote:'Vacation — rest or 1–2 easy runs',runs:[]},
+    {id:'V2',phase:'Vacation',weekStart:'2026-05-25',vacation:true,vacationNote:'Vacation — rest or 1–2 easy runs',runs:[]},
+    {id:1,phase:'Ramp',weekStart:'2026-06-01',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Back at it — easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:3,note:'Comfortable pace'},
+        {day:5,name:'Long Run',type:'long',miles:4,note:'Settle in, slow and steady'}]},
+    {id:2,phase:'Ramp',weekStart:'2026-06-08',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:3.5,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:5,note:'Building up'}]},
+    {id:3,phase:'Build',weekStart:'2026-06-15',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:6,note:'Focus on time on feet'}]},
+    {id:4,phase:'Build',weekStart:'2026-06-22',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:7,note:'Longest yet — trust the process'}]},
+    {id:5,phase:'Build',weekStart:'2026-06-29',vacation:false,cutback:true,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Cutback week — stay easy'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Keep it comfortable'},
+        {day:5,name:'Long Run',type:'long',miles:5,note:'Recovery long run — nice and relaxed'}]},
+    {id:6,phase:'Build',weekStart:'2026-07-06',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:8,note:'Double digits approaching'}]},
+    {id:7,phase:'Build',weekStart:'2026-07-13',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:9,note:'Strong long run'}]},
+    {id:8,phase:'Build',weekStart:'2026-07-20',vacation:false,cutback:true,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Cutback week — easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Keep it comfortable'},
+        {day:5,name:'Long Run',type:'long',miles:6,note:'Recovery long run'}]},
+    {id:9,phase:'Build',weekStart:'2026-07-27',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:5,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:10,note:'Double digits! Take it easy at first'}]},
+    {id:10,phase:'Peak',weekStart:'2026-08-03',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:5,note:'Mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:11,note:'Almost there — 2 miles shy of race distance'}]},
+    {id:11,phase:'Peak',weekStart:'2026-08-10',vacation:false,cutback:true,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:4,note:'Cutback week — easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:5,note:'Comfortable pace'},
+        {day:5,name:'Long Run',type:'long',miles:8,note:'Recovery long run'}]},
+    {id:12,phase:'Peak',weekStart:'2026-08-17',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:4,note:'Easy effort'},
+        {day:3,name:'Easy Run',type:'easy',miles:6,note:'Longest mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:12,note:'Peak long run — you\'ve got this'}]},
+    {id:13,phase:'Peak',weekStart:'2026-08-24',vacation:false,peak:true,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:5,note:'Peak week — keep easy effort between runs'},
+        {day:3,name:'Easy Run',type:'easy',miles:6,note:'Peak week mid-week run'},
+        {day:5,name:'Long Run',type:'long',miles:13,note:'Peak week — 0.1 mi shy of race distance!'}]},
+    {id:14,phase:'Taper',weekStart:'2026-08-31',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:3,note:'Taper begins — trust your training'},
+        {day:3,name:'Easy Run',type:'easy',miles:4,note:'Short and comfortable'},
+        {day:5,name:'Long Run',type:'long',miles:6,note:'Taper long run — finish feeling fresh'}]},
+    {id:15,phase:'Taper',weekStart:'2026-09-07',vacation:false,runs:[
+        {day:1,name:'Easy Run',type:'easy',miles:2,note:'Short shakeout — legs should feel springy'},
+        {day:3,name:'Easy Run',type:'easy',miles:2,note:'Easy shake-out'},
+        {day:6,name:'Race Day',type:'race',miles:13.1,note:'Sep 13 — go get it. 13.1 miles.'}]}
 ];
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
@@ -339,35 +405,24 @@ function formatDateFull(dateStr) {
 }
 
 // ── TRAINING PLAN DATES ──────────────────────────────────────────────────────
-// Race is always on week 12, Sunday. Work backwards.
-function getPlanWeekStart(weekNum, raceDateStr) {
-    // weekNum: 1-12
-    // race is week 12, day Sun (6) = day index 6 in Mon-based week
-    // week 12 starts: race date - 6 days
-    var week12Start = addDays(raceDateStr, -6);
-    var offset = (weekNum - 12) * 7;
-    return addDays(week12Start, offset);
+function getPlanRunDate(weekIdx, runIdx) {
+    var w = TRAINING_PLAN[weekIdx];
+    return addDays(w.weekStart, w.runs[runIdx].day);
 }
 
-function getPlanRunDate(weekNum, dayIndex, raceDateStr) {
-    // dayIndex 0=Mon
-    var ws = getPlanWeekStart(weekNum, raceDateStr);
-    return addDays(ws, dayIndex);
+function getPlanRunKey(weekIdx, runIdx) {
+    return 'wi'+weekIdx+'r'+runIdx;
 }
 
-function getPlanRunKey(weekNum, runIdx) {
-    return 'w'+weekNum+'r'+runIdx;
-}
-
-function getCurrentPlanWeek(raceDateStr) {
+function getCurrentPlanWeekIdx() {
     var t = today();
-    for (var w = 1; w <= 12; w++) {
-        var ws = getPlanWeekStart(w, raceDateStr);
+    for (var i = 0; i < TRAINING_PLAN.length; i++) {
+        var ws = TRAINING_PLAN[i].weekStart;
         var we = addDays(ws, 6);
-        if (t >= ws && t <= we) return w;
+        if (t >= ws && t <= we) return i;
     }
-    if (t < getPlanWeekStart(1, raceDateStr)) return 1;
-    return 12;
+    if (t < TRAINING_PLAN[0].weekStart) return 0;
+    return TRAINING_PLAN.length - 1;
 }
 
 // ── PACE UTILS ───────────────────────────────────────────────────────────────
@@ -466,19 +521,16 @@ window.toggleCheck = function(key) {
 };
 
 // Auto-match runs to plan items based on date
-function autoMatchPlan(runs, raceDateStr) {
-    if (!raceDateStr) return getChecked();
+function autoMatchPlan(runs) {
     var checked = getChecked();
-    for (var w=1; w<=12; w++) {
-        var week = TRAINING_PLAN[w-1];
+    for (var i=0; i<TRAINING_PLAN.length; i++) {
+        var week = TRAINING_PLAN[i];
+        if (week.vacation) continue;
         for (var r=0; r<week.runs.length; r++) {
-            var key = getPlanRunKey(w, r);
-            var runDate = getPlanRunDate(w, week.runs[r].day, raceDateStr);
-            // Check if any recorded run happened on this date
+            var key = getPlanRunKey(i, r);
+            var runDate = getPlanRunDate(i, r);
             var matched = runs.some(function(run){ return run.date === runDate; });
-            if (matched && !checked[key]) {
-                checked[key] = true;
-            }
+            if (matched && !checked[key]) checked[key] = true;
         }
     }
     saveChecked(checked);
@@ -486,15 +538,14 @@ function autoMatchPlan(runs, raceDateStr) {
 }
 
 // ── RENDER TRAINING PLAN ──────────────────────────────────────────────────────
-var displayWeek = null; // currently shown week (1-12)
+var displayWeek = null; // index into TRAINING_PLAN
 
 window.changeWeek = function(delta) {
-    displayWeek = Math.max(1, Math.min(12, displayWeek + delta));
+    displayWeek = Math.max(0, Math.min(TRAINING_PLAN.length-1, displayWeek + delta));
     renderPlan();
 };
 
 function renderPlan() {
-    var raceDateStr = get('bn_race_date', null);
     var checked = getChecked();
     var runs = getRuns();
     var el = document.getElementById('plan-content');
@@ -502,64 +553,69 @@ function renderPlan() {
     var prevBtn = document.getElementById('prev-week-btn');
     var nextBtn = document.getElementById('next-week-btn');
 
-    if (displayWeek === null) {
-        displayWeek = raceDateStr ? getCurrentPlanWeek(raceDateStr) : 1;
-    }
+    if (displayWeek === null) displayWeek = getCurrentPlanWeekIdx();
 
-    prevBtn.disabled = displayWeek <= 1;
-    nextBtn.disabled = displayWeek >= 12;
+    prevBtn.disabled = displayWeek <= 0;
+    nextBtn.disabled = displayWeek >= TRAINING_PLAN.length - 1;
 
-    if (!raceDateStr) {
-        weekLabelEl.textContent = 'Week '+displayWeek;
-        el.innerHTML = '<div class="no-race-state"><p>Set a race date in Settings to see training plan dates.</p><button class="btn btn-primary" onclick="openSettings()">Set Race Date</button></div>';
+    var week = TRAINING_PLAN[displayWeek];
+    var ws = week.weekStart;
+    var we = addDays(ws, 6);
+    var weekId = typeof week.id === 'number' ? 'Week '+week.id : week.id;
+    weekLabelEl.textContent = weekId + ' · ' + week.phase + ' · ' + formatDateShort(ws) + '–' + formatDateShort(we);
+
+    // Vacation week
+    if (week.vacation) {
+        el.innerHTML = '<div class="no-race-state" style="padding: 28px 0;">'
+            + '<p style="font-size:1.5rem; margin-bottom: 8px;">🏖️</p>'
+            + '<p style="text-transform:none; font-size:0.88rem; color:var(--text-secondary); letter-spacing:0;">'
+            + week.vacationNote + '</p>'
+            + '<p style="margin-top:8px; font-size:0.72rem;">'+formatDateShort(ws)+' – '+formatDateShort(we)+'</p>'
+            + '</div>';
         return;
     }
 
-    var ws = getPlanWeekStart(displayWeek, raceDateStr);
-    var we = addDays(ws, 6);
-    weekLabelEl.textContent = 'Week '+displayWeek+' · '+formatDateShort(ws)+'–'+formatDateShort(we);
+    // Cutback / peak badge
+    var weekNote = week.cutback ? ' · <span style="color:var(--text-tertiary);font-size:0.68rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;">Cutback</span>'
+        : week.peak ? ' · <span style="color:var(--text-tertiary);font-size:0.68rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;">Peak</span>' : '';
 
-    var week = TRAINING_PLAN[displayWeek-1];
     var html = '<div class="plan-runs">';
-
     for (var i=0; i<week.runs.length; i++) {
         var run = week.runs[i];
         var key = getPlanRunKey(displayWeek, i);
-        var runDate = getPlanRunDate(displayWeek, run.day, raceDateStr);
+        var runDate = getPlanRunDate(displayWeek, i);
         var isChecked = !!checked[key];
         var isPast = runDate < today();
-
-        // Find a Strava-matched run for this date
-        var matchedRun = runs.find(function(r){ return r.date === runDate && r.source === 'strava'; });
+        var matchedRun = null;
+        for (var j=0; j<runs.length; j++) {
+            if (runs[j].date === runDate && runs[j].source === 'strava') { matchedRun = runs[j]; break; }
+        }
         var isStravaMatch = !!matchedRun;
-
         var checkClass = isStravaMatch ? 'strava-matched' : (isChecked ? 'checked' : '');
         var checkIcon = (isChecked || isStravaMatch)
             ? '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>'
             : '';
-
-        var typeClass = 'run-type-'+run.type;
-        var typeLabel = run.type.charAt(0).toUpperCase()+run.type.slice(1);
-
         var stravaBadge = isStravaMatch
-            ? '<a class="strava-badge" href="#" onclick="event.preventDefault()"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> '+matchedRun.dist.toFixed(1)+' mi</a>'
+            ? '<span class="strava-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> '+matchedRun.dist.toFixed(1)+' mi</span>'
             : '';
-
         html += '<div class="plan-run-item">'
             + '<button class="plan-checkbox '+checkClass+'" onclick="toggleCheck(\''+key+'\')" title="'+(isChecked?'Mark incomplete':'Mark complete')+'">'+checkIcon+'</button>'
             + '<div class="plan-run-info">'
             +   '<div class="plan-run-top">'
             +     '<span class="plan-run-day">'+DAY_NAMES[run.day]+'</span>'
             +     '<span class="plan-run-name'+(isChecked||isStravaMatch?' done':'')+'">'+run.name+'</span>'
-            +     '<span class="run-type-pill '+typeClass+'">'+typeLabel+'</span>'
+            +     '<span class="run-type-pill run-type-'+run.type+'">'+run.type+'</span>'
             +     stravaBadge
             +   '</div>'
-            +   '<div class="plan-run-note">'+formatDateFull(runDate)+(isPast&&!isChecked&&!isStravaMatch?' · <span style="color:var(--warning)">Missed</span>':'')+' · '+run.note+'</div>'
+            +   '<div class="plan-run-note">'+formatDateFull(runDate)
+            +     (isPast&&!isChecked&&!isStravaMatch?' · <span style="color:var(--warning)">Missed</span>':'')
+            +     weekNote + ' · ' + run.note
+            +   '</div>'
             + '</div>'
             + '<div class="plan-run-miles">'+run.miles+'<br><small>mi</small></div>'
             + '</div>';
+        weekNote = ''; // only show on first run
     }
-
     html += '</div>';
     el.innerHTML = html;
 }
@@ -620,32 +676,29 @@ function renderStats(runs) {
 }
 
 // ── RENDER HERO ───────────────────────────────────────────────────────────────
-function renderHero(runs) {
-    var raceDateStr = get('bn_race_date', null);
-    if (!raceDateStr) {
-        document.getElementById('hero-days').textContent = '--';
-        document.getElementById('hero-week').textContent = '--';
-        document.getElementById('hero-complete').textContent = '0%';
-        return;
-    }
-    var daysLeft = diffDays(raceDateStr, today());
-    document.getElementById('hero-days').textContent = daysLeft > 0 ? daysLeft : 0;
-    document.getElementById('hero-week').textContent = getCurrentPlanWeek(raceDateStr)+' of 12';
+function renderHero() {
+    var daysLeft = diffDays(RACE_DATE, today());
+    document.getElementById('hero-days').textContent = Math.max(0, daysLeft);
+
+    var curIdx = getCurrentPlanWeekIdx();
+    var cur = TRAINING_PLAN[curIdx];
+    var weekDisplay = typeof cur.id === 'number' ? cur.id + ' / 15' : cur.id;
+    document.getElementById('hero-week').textContent = weekDisplay;
 
     var checked = getChecked();
     var totalRuns = 0;
-    for (var w=1; w<=12; w++) totalRuns += TRAINING_PLAN[w-1].runs.length;
-    var done = Object.values(checked).filter(Boolean).length;
+    for (var i=0; i<TRAINING_PLAN.length; i++) totalRuns += TRAINING_PLAN[i].runs.length;
+    var done = Object.keys(checked).filter(function(k){ return checked[k]; }).length;
     document.getElementById('hero-complete').textContent = Math.round(done/totalRuns*100)+'%';
 
     if (daysLeft > 0) {
-        var raceName = get('bn_race_name', null);
-        document.getElementById('hero-title').textContent = (raceName || 'Half Marathon') + ' Training';
+        document.getElementById('hero-title').textContent = 'Training';
+        document.getElementById('hero-subtitle').textContent = '13.1 miles. Sep 13, 2026.';
     } else if (daysLeft === 0) {
         document.getElementById('hero-title').textContent = 'Race Day!';
         document.getElementById('hero-subtitle').textContent = 'Good luck today. You\'ve got this.';
     } else {
-        document.getElementById('hero-title').textContent = 'Race Complete!';
+        document.getElementById('hero-title').textContent = 'Race Complete';
         document.getElementById('hero-subtitle').textContent = 'You ran a half marathon. 13.1 miles.';
     }
 }
@@ -696,9 +749,8 @@ function renderWeeklyChart(runs) {
 // ── RENDER ALL ────────────────────────────────────────────────────────────────
 function renderAll() {
     var runs = getRuns();
-    var raceDateStr = get('bn_race_date', null);
-    if (raceDateStr) autoMatchPlan(runs, raceDateStr);
-    renderHero(runs);
+    autoMatchPlan(runs);
+    renderHero();
     renderStats(runs);
     renderPlan();
     renderRunsList(runs);
@@ -869,9 +921,7 @@ window.syncStrava = function() {
 
 // ── SETTINGS MODAL ────────────────────────────────────────────────────────────
 window.openSettings = function() {
-    var raceDate = get('bn_race_date', null);
     var clientId = get('bn_strava_client_id', null);
-    if (raceDate) document.getElementById('settings-race-date').value = raceDate;
     document.getElementById('settings-client-id').value = clientId || '224470';
     updateStravaUI();
     document.getElementById('settings-modal').classList.add('open');
@@ -882,11 +932,7 @@ window.closeSettings = function() {
 };
 
 window.saveSettings = function() {
-    var raceDate = document.getElementById('settings-race-date').value;
-    if (raceDate) set('bn_race_date', raceDate);
-    else localStorage.removeItem('bn_race_date');
     closeSettings();
-    renderAll();
     showToast('Settings saved.');
 };
 
@@ -897,7 +943,7 @@ document.getElementById('settings-modal').addEventListener('click', function(e) 
 
 // ── EXPORT / IMPORT ───────────────────────────────────────────────────────────
 window.exportData = function() {
-    var data = {runs: getRuns(), checked: getChecked(), raceDate: get('bn_race_date', null)};
+    var data = {runs: getRuns(), checked: getChecked()};
     var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -914,7 +960,6 @@ window.importData = function(evt) {
             var data = JSON.parse(e.target.result);
             if (data.runs) saveRuns(data.runs);
             if (data.checked) saveChecked(data.checked);
-            if (data.raceDate) set('bn_race_date', data.raceDate);
             renderAll();
             showToast('Imported successfully.');
         } catch(err) { showToast('Invalid file.'); }
@@ -925,7 +970,7 @@ window.importData = function(evt) {
 
 window.clearAllData = function() {
     if (!confirm('Delete all training data? This cannot be undone.')) return;
-    ['bn_runs','bn_checked','bn_race_date','bn_strava_access_token','bn_strava_refresh_token','bn_strava_token_expiry','bn_strava_last_sync'].forEach(function(k){ localStorage.removeItem(k); });
+    ['bn_runs','bn_checked','bn_strava_access_token','bn_strava_refresh_token','bn_strava_token_expiry','bn_strava_last_sync'].forEach(function(k){ localStorage.removeItem(k); });
     closeSettings();
     renderAll();
     showToast('All data cleared.');
@@ -935,12 +980,6 @@ window.clearAllData = function() {
 document.getElementById('run-date').value = today();
 handleOAuthCallback();
 renderAll();
-
-// First-time prompt
-if (!get('bn_race_date', null) && !get('bn_onboarded', false)) {
-    set('bn_onboarded', true);
-    setTimeout(openSettings, 600);
-}
 
 })();
 </script>
